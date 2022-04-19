@@ -1,11 +1,11 @@
 #include "Register.hpp"
 
-int Register::read()
+int8_t Register::read()
 {
-    return data;
+	return (int8_t) m_data;
 }
 
-void Register::write(int data)
+void Register::write(int8_t data)
 {
-    this->data = data;
+	m_data = (uint8_t) data;
 }

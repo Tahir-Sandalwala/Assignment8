@@ -1,14 +1,16 @@
 #ifndef REGISTER_HPP
 #define REGISTER_HPP
 
+#include "Utility.hpp"
+
 class Register
 {
 private:
-	int data;
+	uint8_t m_data;
 
 public:
-	int read();
-	void write(int data);
+	int8_t read();
+	void write(int8_t data);
 };
 
 #endif	// REGISTER_HPP

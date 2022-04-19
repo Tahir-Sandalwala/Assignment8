@@ -1,46 +1,38 @@
 #include "RegisterFile.hpp"
 
-int RegisterFile::read(int RegNum)
+int8_t RegisterFile::read(uint8_t reg_num)
 {
-    if(!readPort[0])
-    {
-        return readFirstPort(RegNum);
-    }
-    else if(!readPort[1])
-    {
-        return readSecondPort(RegNum);
-    }
-    else
-    {
-        requestProcessed = false;
-        return 0;
-    }
+	if (!m_read_port_used[0])
+	{
+		return read_reg_from_port(reg_num, 0);
+	}
+	else if (!m_read_port_used[1])
+	{
+		return read_reg_from_port(reg_num, 1);
+	}
+
+	m_request_processed = false;
+	return -1;
 }
 
-int RegisterFile::readFirstPort(int RegNum)
+int8_t RegisterFile::read_reg_from_port(uint8_t reg_num, uint8_t port)
 {
-    readPort[0] = true;
-    requestProcessed = true;
-    return Reg[RegNum].read();
+	m_read_port_used[port] = true;
+	m_request_processed = true;
+	return m_reg[reg_num].read();
 }
 
-int RegisterFile::readSecondPort(int RegNum)
-{
-    readPort[1] = true;
-    requestProcessed = true;
-    return Reg[RegNum].read();
-}
 
-void RegisterFile::write(int RegNum, int data)
+void RegisterFile::write(uint8_t reg_num, int8_t data)
 {
-    if(!writePort)
-    {
-        writePort = true;
-        requestProcessed = true;
-        Reg[RegNum].write(data);
-    }
-    else
-    {
-        requestProcessed = false;
-    }
+	if (!m_write_port_used)
+	{
+		m_write_port_used = true;
+		m_request_processed = true;
+		m_reg[reg_num].write(data);
+	}
+	else
+	{
+		m_request_processed = false;
+	}
 }

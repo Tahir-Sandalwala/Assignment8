@@ -1,16 +1,15 @@
 #include "Cache.hpp"
 
-int Cache::read(int address)
+uint8_t Cache::read(uint8_t address)
 {
-    int setAddress = address >> 2;
-    int offsetAddress = address & 3;
-    int data = set[setAddress].offset[offsetAddress];
-    return data;
+    uint8_t set = address >> 2;
+    uint8_t offset = address & 3;
+    return m_set[set][offset];
 }
 
-void Cache::write(int address, int val)
+void Cache::write(uint8_t address, uint8_t val)
 {
-    int setAddress = address >> 2;
-    int offsetAddress = address & 3;
-    set[setAddress].offset[offsetAddress] = val;
+    uint8_t set = address >> 2;
+    uint8_t offset = address & 3;
+    m_set[set][offset] = val;
 }

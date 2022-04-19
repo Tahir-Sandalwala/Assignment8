@@ -6,11 +6,11 @@
 class Cache
 {
 protected:
-	Block set[NUM_SETS];
+	Block m_set[NUM_SETS];
 
 public:
-	int read(int address);
-	void write(int address, int data);
+	uint8_t read(uint8_t address);
+	void write(uint8_t address, uint8_t data);
 };
 
 #endif	// CACHE_HPP
