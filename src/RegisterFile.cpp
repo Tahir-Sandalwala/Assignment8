@@ -1,4 +1,4 @@
-#include "Processor.h"
+#include "RegisterFile.hpp"
 
 int RegisterFile::read(int RegNum)
 {
@@ -44,4 +44,3 @@ void RegisterFile::write(int RegNum, int data)
         requestProcessed = false;
     }
 }
-

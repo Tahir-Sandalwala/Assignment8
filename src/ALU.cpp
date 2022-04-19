@@ -1,4 +1,4 @@
-#include "Processor.h"
+#include "ALU.hpp"
 
 int ALU::ADD(int a, int b)
 {
@@ -39,4 +39,3 @@ int ALU::XOR(int a, int b)
 {
     return a ^ b;
 }
-

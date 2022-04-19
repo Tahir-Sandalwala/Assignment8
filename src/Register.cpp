@@ -1,4 +1,4 @@
-#include "Processor.h"
+#include "Register.hpp"
 
 int Register::read()
 {
@@ -9,4 +9,3 @@ void Register::write(int data)
 {
     this->data = data;
 }
-

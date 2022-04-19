@@ -1,0 +1,59 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# VScode project files
+.vscode/
+
+# CLion
+.idea/
+
+# Database files
+*.db
+
+# Logs
+logs/
+
+# Build files
+build/
+vs_build/
+.cache/
+cmake-build-debug/
+
+# Qt specific files
+.qt_for_python/
+
+# Profiling data
+profiling/
+
+# Temporary files
+tmp/
