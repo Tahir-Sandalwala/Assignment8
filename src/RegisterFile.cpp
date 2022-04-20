@@ -1,6 +1,6 @@
 #include "RegisterFile.hpp"
 
-int8_t RegisterFile::read(uint8_t reg_num)
+int8_t RegisterFile::read(uint8_t reg_num) const
 {
 	if (!m_read_port_used[0])
 	{
@@ -15,7 +15,7 @@ int8_t RegisterFile::read(uint8_t reg_num)
 	return -1;
 }
 
-int8_t RegisterFile::read_reg_from_port(uint8_t reg_num, uint8_t port)
+int8_t RegisterFile::read_reg_from_port(uint8_t reg_num, uint8_t port) const
 {
 	m_read_port_used[port] = true;
 	m_request_processed = true;

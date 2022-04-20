@@ -1,6 +1,6 @@
 #include "Register.hpp"
 
-int8_t Register::read()
+int8_t Register::read() const
 {
 	return (int8_t) m_data;
 }

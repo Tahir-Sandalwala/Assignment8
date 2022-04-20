@@ -1,41 +1,41 @@
 #include "ALU.hpp"
 
-int ALU::ADD(int a, int b)
+int8_t ALU::ADD(int8_t a, int8_t b)
 {
-    return a + b;
+	return a + b;
 }
 
-int ALU::SUB(int a, int b)
+int8_t ALU::SUB(int8_t a, int8_t b)
 {
-    return a - b;
+	return a - b;
 }
 
-int ALU::MUL(int a, int b)
+int8_t ALU::MUL(int8_t a, int8_t b)
 {
-    return a * b;
+	return a * b;
 }
 
-int ALU::INC(int a)
+int8_t ALU::INC(int8_t &a)
 {
-    return a + 1;
+	return ++a;
 }
 
-int ALU::AND(int a, int b)
+int8_t ALU::AND(int8_t a, int8_t b)
 {
-    return a & b;
+	return a & b;
 }
 
-int ALU::OR(int a, int b)
+int8_t ALU::OR(int8_t a, int8_t b)
 {
-    return a | b;
+	return a | b;
 }
 
-int ALU::NOT(int a)
+int8_t ALU::NOT(int8_t a)
 {
-    return ~a;
+	return ~a;
 }
 
-int ALU::XOR(int a, int b)
+int8_t ALU::XOR(int8_t a, int8_t b)
 {
-    return a ^ b;
+	return a ^ b;
 }

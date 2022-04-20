@@ -1,17 +1,19 @@
 #ifndef ALU_HPP
 #define ALU_HPP
 
+#include "Utility.hpp"
+
 class ALU
 {
 public:
-	int ADD(int a, int b);
-	int SUB(int a, int b);
-	int MUL(int a, int b);
-	int INC(int a);
-	int AND(int a, int b);
-	int OR(int a, int b);
-	int NOT(int a);
-	int XOR(int a, int b);
+	int8_t ADD(int8_t a, int8_t b);
+	int8_t SUB(int8_t a, int8_t b);
+	int8_t MUL(int8_t a, int8_t b);
+	int8_t INC(int8_t &a);
+	int8_t AND(int8_t a, int8_t b);
+	int8_t OR(int8_t a, int8_t b);
+	int8_t NOT(int8_t a);
+	int8_t XOR(int8_t a, int8_t b);
 };
 
 #endif	// ALU_HPP
