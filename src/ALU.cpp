@@ -15,9 +15,9 @@ int8_t ALU::MUL(int8_t a, int8_t b)
 	return a * b;
 }
 
-int8_t ALU::INC(int8_t &a)
+int8_t ALU::INC(int8_t a)
 {
-	return ++a;
+	return a + 1;
 }
 
 int8_t ALU::AND(int8_t a, int8_t b)

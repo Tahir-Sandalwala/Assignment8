@@ -16,7 +16,7 @@ set(SRC_DIR src)
 set(INCLUDE_DIR include)
 
 set(SRC_FILES ${SRC_DIR}/ALU.cpp ${SRC_DIR}/Cache.cpp ${SRC_DIR}/Register.cpp
-              ${SRC_DIR}/RegisterFile.cpp ${SRC_DIR}/main.cpp)
+              ${SRC_DIR}/RegisterFile.cpp ${SRC_DIR}/main.cpp ${SRC_DIR}/IF_Module.cpp)
 
 set(PROJECT_SOURCES ${SRC_FILES})
 

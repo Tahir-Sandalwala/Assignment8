@@ -7,16 +7,22 @@
 class RegisterFile
 {
 public:
+	RegisterFile();
 	int8_t read(uint8_t reg_num) const;
 	void write(uint8_t reg_num, int8_t data);
 
+	bool can_write();
+	bool can_read();
+
+	bool start_write();
+	void stop_write();
+	bool start_read();
+	void stop_read();
+
 private:
 	Register m_reg[NUM_REGS];
-	mutable bool m_read_port_used[2];
-	mutable bool m_write_port_used;
-	mutable bool m_request_processed;
-
-	int8_t read_reg_from_port(uint8_t reg_num, uint8_t port) const;
+	mutable uint8_t m_read_ports_busy;
+	mutable uint8_t m_write_ports_busy;
 };
 
 #endif	// REGISTER_FILE_HPP

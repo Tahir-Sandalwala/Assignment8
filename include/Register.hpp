@@ -14,12 +14,30 @@ public:
 	void write(int8_t data);
 };
 
+class InstructionRegister
+{
+private:
+	uint16_t m_data;
+
+public:
+	int16_t read() const;
+	void write(int16_t data);
+};
+
+enum class ParamType {
+    Register,
+    Offset,
+    Invalid
+};
+
 struct Param {
-    bool m_is_register;
+    ParamType m_param_type;
     union {
-        std::reference_wrapper<Register> m_reg;
+        Register m_reg;
         Offset m_offset;
     };
+
+    Param();
 };
 
 

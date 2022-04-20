@@ -1,38 +1,65 @@
 #include "RegisterFile.hpp"
 
-int8_t RegisterFile::read(uint8_t reg_num) const
+RegisterFile::RegisterFile() :
+	m_read_ports_busy(0),
+	m_write_ports_busy(0)
 {
-	if (!m_read_port_used[0])
-	{
-		return read_reg_from_port(reg_num, 0);
-	}
-	else if (!m_read_port_used[1])
-	{
-		return read_reg_from_port(reg_num, 1);
-	}
-
-	m_request_processed = false;
-	return -1;
 }
 
-int8_t RegisterFile::read_reg_from_port(uint8_t reg_num, uint8_t port) const
+int8_t RegisterFile::read(uint8_t reg_num) const
 {
-	m_read_port_used[port] = true;
-	m_request_processed = true;
 	return m_reg[reg_num].read();
 }
 
-
 void RegisterFile::write(uint8_t reg_num, int8_t data)
 {
-	if (!m_write_port_used)
+	m_reg[reg_num].write(data);
+}
+
+bool RegisterFile::can_read()
+{
+	return m_read_ports_busy < 2;
+}
+
+bool RegisterFile::can_write()
+{
+	return m_write_ports_busy < 1;
+}
+
+bool RegisterFile::start_read()
+{
+	if (can_read())
 	{
-		m_write_port_used = true;
-		m_request_processed = true;
-		m_reg[reg_num].write(data);
+		m_read_ports_busy++;
+		return true;
 	}
-	else
+	return false;
+}
+
+bool RegisterFile::start_write()
+{
+	if (can_write())
 	{
-		m_request_processed = false;
+		m_write_ports_busy++;
+		return true;
+	}
+	return false;
+}
+
+void RegisterFile::stop_read()
+{
+	m_read_ports_busy--;
+	if (m_read_ports_busy < 0)
+	{
+		m_read_ports_busy = 0;
+	}
+}
+
+void RegisterFile::stop_write()
+{
+	m_write_ports_busy--;
+	if (m_write_ports_busy < 0)
+	{
+		m_write_ports_busy = 0;
 	}
 }
