@@ -6,28 +6,35 @@
 
 class Register
 {
-private:
-	uint8_t m_data;
-
 public:
 	int8_t read() const;
 	void write(int8_t data);
+
+    Register();
+
+    bool m_dirty;
+    uint8_t m_reg_num;
+
+private:
+	uint8_t m_data;
 };
 
 class InstructionRegister
 {
-private:
-	uint16_t m_data;
-
 public:
 	int16_t read() const;
 	void write(int16_t data);
+
+    InstructionRegister();
+
+private:
+	uint16_t m_data;
 };
 
 enum class ParamType {
-    Register,
-    Offset,
-    Invalid
+    REGISTER,
+    OFFSET,
+    INVALID
 };
 
 struct Param {

@@ -3,7 +3,12 @@ cmake_minimum_required(VERSION 3.5)
 project(PipelinedProcessor LANGUAGES CXX)
 
 # set(CMAKE_BUILD_TYPE RelWithDebInfo)
-set(CMAKE_BUILD_TYPE Release)
+# set(CMAKE_BUILD_TYPE Release)
+# SET(CMAKE_CXX_FLAGS_DEBUG "-O0")
+# SET(CMAKE_C_FLAGS_DEBUG "-O0")
+set(CMAKE_BUILD_TYPE Debug)
+
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -15,8 +20,16 @@ set(SRC_DIR src)
 
 set(INCLUDE_DIR include)
 
-set(SRC_FILES ${SRC_DIR}/ALU.cpp ${SRC_DIR}/Cache.cpp ${SRC_DIR}/Register.cpp
-              ${SRC_DIR}/RegisterFile.cpp ${SRC_DIR}/main.cpp ${SRC_DIR}/IF_Module.cpp)
+set(SRC_FILES
+    ${SRC_DIR}/ALU.cpp
+    ${SRC_DIR}/Buffers.cpp
+    ${SRC_DIR}/Cache.cpp
+    ${SRC_DIR}/main.cpp
+    ${SRC_DIR}/Modules.cpp
+    ${SRC_DIR}/Processor.cpp
+    ${SRC_DIR}/Register.cpp
+    ${SRC_DIR}/RegisterFile.cpp
+    ${SRC_DIR}/Utility.cpp)
 
 set(PROJECT_SOURCES ${SRC_FILES})
 

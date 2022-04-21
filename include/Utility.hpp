@@ -11,7 +11,7 @@
 #define REG_SIZE   8
 
 typedef uint8_t Block[BLOCK_SIZE];
-typedef uint8_t Offset;
+typedef int8_t Offset;
 
 enum class Instruction
 {
@@ -57,6 +57,12 @@ private:
 public:
 	invalid_param(const char *arg);
 	virtual const char *what() const throw();
+};
+
+enum class ExecutionStatus {
+	FINISHED,
+	STALLED,
+	HALTED
 };
 
 #endif	// UTILITY_HPP

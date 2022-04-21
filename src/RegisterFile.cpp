@@ -16,48 +16,31 @@ void RegisterFile::write(uint8_t reg_num, int8_t data)
 	m_reg[reg_num].write(data);
 }
 
-bool RegisterFile::can_read()
+bool RegisterFile::can_read(uint8_t reg_num) const
 {
-	return m_read_ports_busy < 2;
+	return m_read_ports_busy < 2 && !m_reg[reg_num].m_dirty;
 }
 
-bool RegisterFile::can_write()
+bool RegisterFile::can_write(uint8_t reg_num) const
 {
-	return m_write_ports_busy < 1;
+	return m_write_ports_busy < 1 && !m_reg[reg_num].m_dirty;
 }
 
-bool RegisterFile::start_read()
+bool RegisterFile::start_write(uint8_t reg_num)
 {
-	if (can_read())
-	{
-		m_read_ports_busy++;
-		return true;
-	}
-	return false;
-}
-
-bool RegisterFile::start_write()
-{
-	if (can_write())
+	if (can_write(reg_num))
 	{
 		m_write_ports_busy++;
+		m_reg[reg_num].m_dirty = true;
 		return true;
 	}
 	return false;
 }
 
-void RegisterFile::stop_read()
-{
-	m_read_ports_busy--;
-	if (m_read_ports_busy < 0)
-	{
-		m_read_ports_busy = 0;
-	}
-}
-
-void RegisterFile::stop_write()
+void RegisterFile::stop_write(uint8_t reg_num)
 {
 	m_write_ports_busy--;
+	m_reg[reg_num].m_dirty = false;
 	if (m_write_ports_busy < 0)
 	{
 		m_write_ports_busy = 0;

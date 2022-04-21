@@ -6,6 +6,7 @@
 class ALU
 {
 public:
+	ALU() = default;
 	int8_t ADD(int8_t a, int8_t b);
 	int8_t SUB(int8_t a, int8_t b);
 	int8_t MUL(int8_t a, int8_t b);

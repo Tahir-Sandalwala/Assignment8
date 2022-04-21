@@ -7,7 +7,16 @@
 
 struct Processor
 {
+	Processor();
+
 	ALU m_alu;
+
+	RegisterFile m_rf;
+	Register m_pc;
+	InstructionRegister m_ir;
+
+    ICache m_icache;
+    DCache m_dcache;
 
 	IF_Module m_if_module;
 	ID_Module m_id_module;
@@ -20,15 +29,16 @@ struct Processor
 	EX_MEM_Buffer m_ex_mem_buf;
 	MEM_WB_Buffer m_mem_wb_buf;
 
-	RegisterFile m_rf;
-	Register m_pc;
-	InstructionRegister m_ir;
-
-    ICache m_icache;
-    DCache m_dcache;
-
-private:
-
+	uint16_t m_clock;
+	uint8_t m_total_instr;
+	uint8_t m_arithmetic_instr;
+	uint8_t m_logical_instr;
+	uint8_t m_data_instr;
+	uint8_t m_control_instr;
+	uint8_t m_halt_instr;
+	uint8_t m_stall;
+	uint8_t m_data_stalls;
+	uint8_t m_control_stalls;
 };
 
 

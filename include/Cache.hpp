@@ -5,12 +5,14 @@
 
 class Cache
 {
-protected:
-	Block m_set[NUM_SETS];
-
 public:
 	uint8_t read(uint8_t address) const;
 	void write(uint8_t address, uint8_t data);
+
+	Cache();
+
+protected:
+	Block m_set[NUM_SETS];
 };
 
 typedef Cache ICache;
