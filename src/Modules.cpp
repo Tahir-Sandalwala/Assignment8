@@ -60,7 +60,6 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 	uint8_t l1_jmp = (ir_ins >> 4) & 0xff;
 	uint8_t l1_beqz = ir_ins & 0xff;
 	bool stalled = false;
-	bool data_stall = true;
 
 	switch (opcode)
 	{
@@ -135,8 +134,6 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 		case 0b1010:
 			ins = Instruction::JMP;
 			params[0] = create_offset(l1_jmp);
-			stalled = true;
-			data_stall = false;
 			break;
 		case 0b1011:
 			ins = Instruction::BEQZ;
@@ -147,8 +144,6 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			params[0] = create_register(reg0);
 			params[0].m_reg.m_reg_num = reg0;
 			params[1] = create_offset(l1_beqz);
-			stalled = true;
-			data_stall = false;
 			break;
 		case 0b1111:
 			ins = Instruction::HLT;
@@ -157,14 +152,10 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			ins = Instruction::INVALID;
 	}
 
-	if (stalled && data_stall)
+	if (stalled)
 	{
 		p.m_data_stalls++;
-		p.m_stall++;
-	}
-	else if (stalled)
-	{
-		p.m_control_stalls++;
+		p.m_stalls++;
 	}
 
 	return ID_EX_Buffer(ins, params, stalled);
@@ -332,7 +323,7 @@ MEM_WB_Buffer MEM_Module::memory(EX_MEM_Buffer ex_mem_buf)
 	Instruction ins = ex_mem_buf.m_ins;
 	Register lmd;
 
-	if (ins == Instruction::HLT || ins == Instruction::JMP)
+	if (ins == Instruction::HLT || ins == Instruction::JMP || ins == Instruction::BEQZ)
 	{
 		return MEM_WB_Buffer(alu, params[0].m_reg, ins, false);
 	}

@@ -4,6 +4,7 @@ RegisterFile::RegisterFile() :
 	m_read_ports_busy(0),
 	m_write_ports_busy(0)
 {
+	m_reg[0].write(0);
 }
 
 int8_t RegisterFile::read(uint8_t reg_num) const

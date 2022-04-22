@@ -92,23 +92,24 @@ int main()
 		}
 
 		p.m_mem_wb_buf = p.m_mem_module.memory(p.m_ex_mem_buf);
-		if (!p.m_mem_wb_buf.m_valid)
+		if (!p.m_mem_wb_buf.m_valid && p.m_mem_wb_buf.m_ins == Instruction::HLT)
 		{
-			if (p.m_mem_wb_buf.m_ins == Instruction::BEQZ || p.m_mem_wb_buf.m_ins == Instruction::JMP)
-			{
-				p.m_control_stalls += 2;
-				p.m_mem_wb_buf.m_valid = true;
-			}
-			if (p.m_mem_wb_buf.m_ins == Instruction::HLT)
-			{
-				p.m_id_ex_buf.m_valid = false;
-				p.m_if_id_buf.m_valid = false;
-				p.m_mem_wb_buf.m_valid = true;
-			}
+			p.m_id_ex_buf.m_valid = false;
+			p.m_if_id_buf.m_valid = false;
+			p.m_mem_wb_buf.m_valid = true;
 		}
 		p.m_ex_mem_buf.m_valid = false;
-		p.m_ex_mem_buf = p.m_ex_module.execute(p.m_id_ex_buf);
+		EX_MEM_Buffer buf = p.m_ex_module.execute(p.m_id_ex_buf);
+		p.m_ex_mem_buf = buf;
 		p.m_id_ex_buf.m_valid = false;
+		if (p.m_ex_mem_buf.m_valid && (p.m_ex_mem_buf.m_ins == Instruction::BEQZ || p.m_ex_mem_buf.m_ins == Instruction::JMP))
+		{
+			p.m_if_id_buf.m_valid = false;
+			p.m_id_ex_buf.m_valid = false;
+			p.m_control_stalls++;
+			p.m_stalls++;
+			continue;
+		}
 		ID_EX_Buffer idex = p.m_id_module.decode(p.m_if_id_buf);
 		if (idex.m_stalled)
 		{
@@ -116,6 +117,12 @@ int main()
 		}
 		p.m_if_id_buf.m_valid = false;
 		p.m_id_ex_buf = idex;
+		if (idex.m_valid && (idex.m_ins == Instruction::BEQZ || idex.m_ins == Instruction::JMP))
+		{
+			p.m_control_stalls++;
+			p.m_stalls++;
+			continue;
+		}
 		p.m_if_id_buf = p.m_if_module.fetch();
 	}
 
@@ -141,7 +148,7 @@ Control stalls                       : 0
 	std::cout << "Control instructions:                     " << (uint16_t) p.m_control_instr << std::endl;
 	std::cout << "Halt instructions:                        " << (uint16_t) p.m_halt_instr << std::endl;
 	std::cout << "Cycles Per Instruction:                   " << (double) p.m_clock / (double) p.m_total_instr << std::endl;
-	std::cout << "Total number of stalls:                   " << (uint16_t) p.m_stall << std::endl;
+	std::cout << "Total number of stalls:                   " << (uint16_t) p.m_stalls << std::endl;
 	std::cout << "Data stalls (RAW):                        " << (uint16_t) p.m_data_stalls << std::endl;
 	std::cout << "Control stalls:                           " << (uint16_t) p.m_control_stalls << std::endl;
 }

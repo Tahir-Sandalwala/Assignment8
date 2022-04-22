@@ -8,7 +8,7 @@ Processor::Processor() :
     m_data_instr(0),
     m_control_instr(0),
     m_halt_instr(0),
-    m_stall(0),
+    m_stalls(0),
     m_data_stalls(0),
     m_control_stalls(0)
 {}

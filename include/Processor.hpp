@@ -36,7 +36,7 @@ struct Processor
 	uint8_t m_data_instr;
 	uint8_t m_control_instr;
 	uint8_t m_halt_instr;
-	uint8_t m_stall;
+	uint8_t m_stalls;
 	uint8_t m_data_stalls;
 	uint8_t m_control_stalls;
 };

@@ -33,7 +33,7 @@ set(SRC_FILES
 
 set(PROJECT_SOURCES ${SRC_FILES})
 
-add_compile_options(-Wall -Wextra -pedantic -Wpedantic -Wshadow -O2)
+add_compile_options(-Wall -Wextra -pedantic -Wpedantic -Wshadow)
 
 if(DEFINED ASANITIZED)
   message(STATUS "Compiling with address sanitizer on...")
