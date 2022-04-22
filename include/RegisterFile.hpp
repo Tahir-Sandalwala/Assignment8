@@ -11,7 +11,6 @@ public:
 	int8_t read(uint8_t reg_num) const;
 	void write(uint8_t reg_num, int8_t data);
 
-	bool can_write(uint8_t reg_num) const;
 	bool can_read(uint8_t reg_num) const;
 
 	bool start_write(uint8_t reg_num);

@@ -92,15 +92,29 @@ int main()
 		}
 
 		p.m_mem_wb_buf = p.m_mem_module.memory(p.m_ex_mem_buf);
+		if (!p.m_mem_wb_buf.m_valid)
+		{
+			if (p.m_mem_wb_buf.m_ins == Instruction::BEQZ || p.m_mem_wb_buf.m_ins == Instruction::JMP)
+			{
+				p.m_control_stalls += 2;
+				p.m_mem_wb_buf.m_valid = true;
+			}
+			if (p.m_mem_wb_buf.m_ins == Instruction::HLT)
+			{
+				p.m_id_ex_buf.m_valid = false;
+				p.m_if_id_buf.m_valid = false;
+				p.m_mem_wb_buf.m_valid = true;
+			}
+		}
 		p.m_ex_mem_buf.m_valid = false;
 		p.m_ex_mem_buf = p.m_ex_module.execute(p.m_id_ex_buf);
 		p.m_id_ex_buf.m_valid = false;
 		ID_EX_Buffer idex = p.m_id_module.decode(p.m_if_id_buf);
-		p.m_if_id_buf.m_valid = false;
 		if (idex.m_stalled)
 		{
 			continue;
 		}
+		p.m_if_id_buf.m_valid = false;
 		p.m_id_ex_buf = idex;
 		p.m_if_id_buf = p.m_if_module.fetch();
 	}

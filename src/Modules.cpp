@@ -6,8 +6,11 @@
 		break; \
 	} \
 	params[0] = create_register(rf.read(reg0)); \
+	params[0].m_reg.m_reg_num = reg0; \
 	params[1] = create_register(rf.read(reg1)); \
-	params[2] = create_register(rf.read(reg2));
+	params[1].m_reg.m_reg_num = reg1; \
+	params[2] = create_register(rf.read(reg2)); \
+	params[2].m_reg.m_reg_num = reg2;
 
 extern Processor p;
 
@@ -19,8 +22,6 @@ IF_ID_Buffer IF_Module::fetch(void)
 	uint16_t instruction = instruction_high | instruction_low;
 	p.m_ir.write(instruction);
 	p.m_pc.write(address + 2);
-
-	p.m_total_instr++;
 
 	return IF_ID_Buffer(p.m_ir);
 }
@@ -77,11 +78,10 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			break;
 		case 0b0011:
 			ins = Instruction::INC;
-			if ((stalled = !rf.can_read(reg0)))
+			if ((stalled = !rf.can_read(reg0) || !rf.start_write(reg0)))
 			{
 				break;
 			}
-			rf.start_write(reg0);
 			params[0] = create_register(rf.read(reg0));
 			params[0].m_reg.m_reg_num = reg0;
 			break;
@@ -99,7 +99,6 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			{
 				break;
 			}
-			rf.start_write(reg0);
 			params[0] = create_register(rf.read(reg0));
 			params[0].m_reg.m_reg_num = reg0;
 			params[1] = create_register(rf.read(reg1));
@@ -196,6 +195,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 	switch (ins)
 	{
 		case Instruction::ADD:
+			std::cout << "ADD" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_reg(params[1]) || !check_if_reg(params[2]))
 			{
 				throw invalid_param("Invalid param!");
@@ -204,6 +204,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_arithmetic_instr;
 			break;
 		case Instruction::SUB:
+			std::cout << "SUB" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_reg(params[1]) || !check_if_reg(params[2]))
 			{
 				throw invalid_param("Invalid param!");
@@ -212,6 +213,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_arithmetic_instr;
 			break;
 		case Instruction::MUL:
+			std::cout << "MUL" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_reg(params[1]) || !check_if_reg(params[2]))
 			{
 				throw invalid_param("Invalid param!");
@@ -220,6 +222,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_arithmetic_instr;
 			break;
 		case Instruction::INC:
+			std::cout << "INC" << std::endl;
 			if (!check_if_reg(params[0]))
 			{
 				throw invalid_param("Invalid param!");
@@ -228,6 +231,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_arithmetic_instr;
 			break;
 		case Instruction::AND:
+			std::cout << "AND" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_reg(params[1]) || !check_if_reg(params[2]))
 			{
 				throw invalid_param("Invalid param!");
@@ -236,6 +240,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_logical_instr;
 			break;
 		case Instruction::OR:
+			std::cout << "OR" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_reg(params[1]) || !check_if_reg(params[2]))
 			{
 				throw invalid_param("Invalid param!");
@@ -244,6 +249,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_logical_instr;
 			break;
 		case Instruction::NOT:
+			std::cout << "NOT" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_reg(params[1]))
 			{
 				throw invalid_param("Invalid param!");
@@ -252,6 +258,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_logical_instr;
 			break;
 		case Instruction::XOR:
+			std::cout << "XOR" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_reg(params[1]) || !check_if_reg(params[2]))
 			{
 				throw invalid_param("Invalid param!");
@@ -260,6 +267,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_logical_instr;
 			break;
 		case Instruction::LOAD:
+			std::cout << "LOAD" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_reg(params[1]) || !check_if_offset(params[2]))
 			{
 				throw invalid_param("Invalid param!");
@@ -268,6 +276,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_data_instr;
 			break;
 		case Instruction::STORE:
+			std::cout << "STORE" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_reg(params[1]) || !check_if_offset(params[2]))
 			{
 				throw invalid_param("Invalid param!");
@@ -276,6 +285,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_data_instr;
 			break;
 		case Instruction::JMP:
+			std::cout << "JMP" << std::endl;
 			if (!check_if_offset(params[0]))
 			{
 				throw invalid_param("Invalid param!");
@@ -285,6 +295,7 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_control_instr;
 			break;
 		case Instruction::BEQZ:
+			std::cout << "BEQZ" << std::endl;
 			if (!check_if_reg(params[0]) || !check_if_offset(params[1]))
 			{
 				throw invalid_param("Invalid param!");
@@ -297,11 +308,15 @@ EX_MEM_Buffer EX_Module::execute(ID_EX_Buffer id_ex_buf)
 			++p.m_control_instr;
 			break;
 		case Instruction::HLT:
+			std::cout << "HLT" << std::endl;
 			++p.m_halt_instr;
 			break;
 		case Instruction::INVALID:
+			std::cout << "INVALID" << std::endl;
 			std::cerr << "Invalid instruction. Skipping execution!" << std::endl;
 	}
+
+	++p.m_total_instr;
 
 	return EX_MEM_Buffer(alu_output, params, ins);
 }
@@ -317,7 +332,11 @@ MEM_WB_Buffer MEM_Module::memory(EX_MEM_Buffer ex_mem_buf)
 	Instruction ins = ex_mem_buf.m_ins;
 	Register lmd;
 
-	if (ins == Instruction::STORE)
+	if (ins == Instruction::HLT || ins == Instruction::JMP)
+	{
+		return MEM_WB_Buffer(alu, params[0].m_reg, ins, false);
+	}
+	else if (ins == Instruction::STORE)
 	{
 		p.m_dcache.write(alu.read(), params[0].m_reg.read());
 	}
@@ -347,12 +366,11 @@ ExecutionStatus WB_Module::write(MEM_WB_Buffer mem_wb_buf)
 
 	// if (!rf.can_write(reg_num))
 	// {
-		// p.m_stall++;
-		// p.m_data_stalls++;
-		// return ExecutionStatus::STALLED;
+	// p.m_stall++;
+	// p.m_data_stalls++;
+	// return ExecutionStatus::STALLED;
 	// }
 
 	rf.write(reg_num, mem_wb_buf.m_output.read());
-	rf.stop_write(reg_num);
 	return ExecutionStatus::FINISHED;
 }
