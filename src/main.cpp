@@ -110,6 +110,10 @@ int main()
 			p.m_stalls++;
 			continue;
 		}
+		if (p.m_ex_mem_buf.m_valid && p.m_ex_mem_buf.m_ins == Instruction::HLT)
+		{
+			continue;
+		}
 		ID_EX_Buffer idex = p.m_id_module.decode(p.m_if_id_buf);
 		if (idex.m_stalled)
 		{
@@ -149,8 +153,12 @@ int main()
 	}
 
 	std::ofstream out_rf("./RF.out.txt", std::ios::out);
+	std::stringstream ss;
 	for (uint8_t i = 0; i < NUM_REGS; i++)
 	{
-		out_rf << std::hex << std::setfill('0') << std::setw(sizeof(uint8_t) * 2) << (uint16_t) p.m_rf.read(i) << std::endl;
+		ss << std::hex << std::setfill('0') << std::setw(sizeof(uint8_t) * 2) << (uint16_t) p.m_rf.read(i);
+		std::string s = ss.str();
+		s = s.substr(s.length() - 2, 2);
+		out_rf << s << std::endl;
 	}
 }

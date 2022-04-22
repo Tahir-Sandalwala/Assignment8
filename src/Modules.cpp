@@ -342,7 +342,7 @@ MEM_WB_Buffer MEM_Module::memory(EX_MEM_Buffer ex_mem_buf)
 
 ExecutionStatus WB_Module::write(MEM_WB_Buffer mem_wb_buf)
 {
-	if (!mem_wb_buf.m_valid)
+	if (!mem_wb_buf.m_valid || mem_wb_buf.m_ins == Instruction::STORE)
 	{
 		return ExecutionStatus::FINISHED;
 	}
