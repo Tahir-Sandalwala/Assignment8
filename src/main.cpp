@@ -2,6 +2,7 @@
 #include <chrono>
 #include <cstring>
 #include <fstream>
+#include <iomanip>
 #include <thread>
 
 Processor p;
@@ -82,7 +83,6 @@ int main()
 
 	while (true)
 	{
-		// std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		p.m_clock++;
 		ExecutionStatus stat = p.m_wb_module.write(p.m_mem_wb_buf);
 		p.m_mem_wb_buf.m_valid = false;
@@ -126,20 +126,6 @@ int main()
 		p.m_if_id_buf = p.m_if_module.fetch();
 	}
 
-	/*
-Total number of instructions executed: 8
-Number of instructions in each class
-Arithmetic instructions              : 3
-Logical instructions                 : 1
-Data instructions                    : 3
-Control instructions                 : 0
-Halt instructions                    : 1
-Cycles Per Instruction               : 2.25
-Total number of stalls               : 6
-Data stalls (RAW)                    : 6
-Control stalls                       : 0
-    */
-
 	std::cout << "Total number of instructions executed:    " << (uint16_t) p.m_total_instr << std::endl;
 	std::cout << "Number of instructions in each class" << std::endl;
 	std::cout << "Arithmetic instructions:                  " << (uint16_t) p.m_arithmetic_instr << std::endl;
@@ -151,4 +137,20 @@ Control stalls                       : 0
 	std::cout << "Total number of stalls:                   " << (uint16_t) p.m_stalls << std::endl;
 	std::cout << "Data stalls (RAW):                        " << (uint16_t) p.m_data_stalls << std::endl;
 	std::cout << "Control stalls:                           " << (uint16_t) p.m_control_stalls << std::endl;
+
+	std::ofstream out_dcache("./DCache.out.txt", std::ios::out);
+	for (uint8_t i = 0; i < NUM_SETS; i++)
+	{
+		for (uint8_t j = 0; j < BLOCK_SIZE; j++)
+		{
+			int8_t output_address = (i << 2) + j;
+			out_dcache << std::hex << std::setfill('0') << std::setw(sizeof(uint8_t) * 2) << (uint16_t) p.m_dcache.read(output_address) << std::endl;
+		}
+	}
+
+	std::ofstream out_rf("./RF.out.txt", std::ios::out);
+	for (uint8_t i = 0; i < NUM_REGS; i++)
+	{
+		out_rf << std::hex << std::setfill('0') << std::setw(sizeof(uint8_t) * 2) << (uint16_t) p.m_rf.read(i) << std::endl;
+	}
 }
