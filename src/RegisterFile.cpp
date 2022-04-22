@@ -24,10 +24,6 @@ bool RegisterFile::can_read(uint8_t reg_num) const
 
 bool RegisterFile::start_write(uint8_t reg_num)
 {
-	if (can_read(reg_num))
-	{
-		m_reg[reg_num].m_dirty = true;
-		return true;
-	}
-	return false;
+	m_reg[reg_num].m_dirty = true;
+	return true;
 }
