@@ -1,6 +1,8 @@
 #include "Processor.hpp"
+#include <chrono>
 #include <cstring>
 #include <fstream>
+#include <thread>
 
 Processor p;
 
@@ -80,6 +82,7 @@ int main()
 
 	while (true)
 	{
+		// std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		p.m_clock++;
 		ExecutionStatus stat = p.m_wb_module.write(p.m_mem_wb_buf);
 		p.m_mem_wb_buf.m_valid = false;
@@ -92,17 +95,15 @@ int main()
 		p.m_ex_mem_buf.m_valid = false;
 		p.m_ex_mem_buf = p.m_ex_module.execute(p.m_id_ex_buf);
 		p.m_id_ex_buf.m_valid = false;
-        ID_EX_Buffer idex = p.m_id_module.decode(p.m_if_id_buf);
+		ID_EX_Buffer idex = p.m_id_module.decode(p.m_if_id_buf);
+		p.m_if_id_buf.m_valid = false;
 		if (idex.m_stalled)
 		{
 			continue;
 		}
 		p.m_id_ex_buf = idex;
-		p.m_if_id_buf.m_valid = false;
 		p.m_if_id_buf = p.m_if_module.fetch();
-		std::cout << "clock = " << p.m_clock << std::endl;
 	}
-	// std::cout << "here22" << std::endl;
 
 	/*
 Total number of instructions executed: 8
@@ -118,15 +119,15 @@ Data stalls (RAW)                    : 6
 Control stalls                       : 0
     */
 
-	std::cout << "Total number of instructions executed:    " << p.m_total_instr << std::endl;
+	std::cout << "Total number of instructions executed:    " << (uint16_t) p.m_total_instr << std::endl;
 	std::cout << "Number of instructions in each class" << std::endl;
-	std::cout << "Arithmetic instructions:                  " << p.m_arithmetic_instr << std::endl;
-	std::cout << "Logical instructions:                     " << p.m_logical_instr << std::endl;
-	std::cout << "Data instructions:                        " << p.m_data_instr << std::endl;
-	std::cout << "Control instructions:                     " << p.m_control_instr << std::endl;
-	std::cout << "Halt instructions:                        " << p.m_halt_instr << std::endl;
+	std::cout << "Arithmetic instructions:                  " << (uint16_t) p.m_arithmetic_instr << std::endl;
+	std::cout << "Logical instructions:                     " << (uint16_t) p.m_logical_instr << std::endl;
+	std::cout << "Data instructions:                        " << (uint16_t) p.m_data_instr << std::endl;
+	std::cout << "Control instructions:                     " << (uint16_t) p.m_control_instr << std::endl;
+	std::cout << "Halt instructions:                        " << (uint16_t) p.m_halt_instr << std::endl;
 	std::cout << "Cycles Per Instruction:                   " << (double) p.m_clock / (double) p.m_total_instr << std::endl;
-    std::cout << "Total number of stalls:                   " << p.m_stall << std::endl;
-    std::cout << "Data stalls (RAW):                        " << p.m_data_stalls << std::endl;
-    std::cout << "Control stalls:                           " << p.m_control_stalls << std::endl;
+	std::cout << "Total number of stalls:                   " << (uint16_t) p.m_stall << std::endl;
+	std::cout << "Data stalls (RAW):                        " << (uint16_t) p.m_data_stalls << std::endl;
+	std::cout << "Control stalls:                           " << (uint16_t) p.m_control_stalls << std::endl;
 }

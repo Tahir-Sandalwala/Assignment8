@@ -1,11 +1,10 @@
 #include "Processor.hpp"
 
 #define init_all_registers() \
-	if ((stalled = (!rf.can_write(reg0) || !rf.can_read(reg1) || !rf.can_read(reg2)))) \
+	if ((stalled = (!rf.can_read(reg1) || !rf.can_read(reg2) || !rf.start_write(reg0)))) \
 	{ \
 		break; \
 	} \
-	rf.start_write(reg0); \
 	params[0] = create_register(rf.read(reg0)); \
 	params[1] = create_register(rf.read(reg1)); \
 	params[2] = create_register(rf.read(reg2));
@@ -67,17 +66,14 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 		case 0b0000:
 			ins = Instruction::ADD;
 			init_all_registers();
-			std::cout << "ADD" << std::endl;
 			break;
 		case 0b0001:
 			ins = Instruction::SUB;
 			init_all_registers();
-			std::cout << "SUB" << std::endl;
 			break;
 		case 0b0010:
 			ins = Instruction::MUL;
 			init_all_registers();
-			std::cout << "MUL" << std::endl;
 			break;
 		case 0b0011:
 			ins = Instruction::INC;
@@ -88,17 +84,14 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			rf.start_write(reg0);
 			params[0] = create_register(rf.read(reg0));
 			params[0].m_reg.m_reg_num = reg0;
-			std::cout << "INC" << std::endl;
 			break;
 		case 0b0100:
 			ins = Instruction::AND;
 			init_all_registers();
-			std::cout << "AND" << std::endl;
 			break;
 		case 0b0101:
 			ins = Instruction::OR;
 			init_all_registers();
-			std::cout << "OR" << std::endl;
 			break;
 		case 0b0110:
 			ins = Instruction::NOT;
@@ -111,12 +104,10 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			params[0].m_reg.m_reg_num = reg0;
 			params[1] = create_register(rf.read(reg1));
 			params[1].m_reg.m_reg_num = reg1;
-			std::cout << "NOT" << std::endl;
 			break;
 		case 0b0111:
 			ins = Instruction::XOR;
 			init_all_registers();
-			std::cout << "XOR" << std::endl;
 			break;
 		case 0b1000:
 			ins = Instruction::LOAD;
@@ -129,7 +120,6 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			params[1] = create_register(rf.read(reg1));
 			params[1].m_reg.m_reg_num = reg1;
 			params[2] = create_offset(reg2);
-			std::cout << "LOAD" << std::endl;
 			break;
 		case 0b1001:
 			ins = Instruction::STORE;
@@ -142,14 +132,12 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			params[1] = create_register(rf.read(reg1));
 			params[1].m_reg.m_reg_num = reg1;
 			params[2] = create_offset(reg2);
-			std::cout << "STORE" << std::endl;
 			break;
 		case 0b1010:
 			ins = Instruction::JMP;
 			params[0] = create_offset(l1_jmp);
 			stalled = true;
 			data_stall = false;
-			std::cout << "JMP" << std::endl;
 			break;
 		case 0b1011:
 			ins = Instruction::BEQZ;
@@ -162,15 +150,12 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			params[1] = create_offset(l1_beqz);
 			stalled = true;
 			data_stall = false;
-			std::cout << "BEQZ" << std::endl;
 			break;
 		case 0b1111:
 			ins = Instruction::HLT;
-			std::cout << "HLT" << std::endl;
 			break;
 		default:
 			ins = Instruction::INVALID;
-			std::cout << "INVALID" << std::endl;
 	}
 
 	if (stalled && data_stall)
