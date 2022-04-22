@@ -4,7 +4,7 @@
 
 Processor p;
 
-int main(int argc, char *argv[])
+int main()
 {
 	std::ifstream icache("./ICache.txt", std::ios::in);
 
@@ -100,7 +100,9 @@ int main(int argc, char *argv[])
 		p.m_id_ex_buf = idex;
 		p.m_if_id_buf.m_valid = false;
 		p.m_if_id_buf = p.m_if_module.fetch();
+		std::cout << "clock = " << p.m_clock << std::endl;
 	}
+	// std::cout << "here22" << std::endl;
 
 	/*
 Total number of instructions executed: 8
