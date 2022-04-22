@@ -141,7 +141,7 @@ ID_EX_Buffer ID_Module::decode(IF_ID_Buffer if_id_buf)
 			{
 				break;
 			}
-			params[0] = create_register(reg0);
+			params[0] = create_register(rf.read(reg0));
 			params[0].m_reg.m_reg_num = reg0;
 			params[1] = create_offset(l1_beqz);
 			break;
